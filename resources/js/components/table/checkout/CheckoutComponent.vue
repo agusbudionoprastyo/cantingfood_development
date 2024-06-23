@@ -27,14 +27,14 @@
                                 </div>
                                 <label for="cash" class="db-field-label text-heading">{{ $t('label.cash_card') }}</label>
                             </li>
-                            <!-- <li class="flex items-center gap-1.5">
+                            <li class="flex items-center gap-1.5">
                                 <div class="custom-radio">
                                     <input type="radio" id="digital" v-model="paymentMethod" value="digitalPayment"
                                            class="custom-radio-field">
                                     <span class="custom-radio-span border-gray-400"></span>
                                 </div>
                                 <label for="digital" class="db-field-label text-heading">{{ $t('label.digital_payment') }}</label>
-                            </li> -->
+                            </li>
                         </ul>
                     </div>
 
