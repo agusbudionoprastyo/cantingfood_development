@@ -27,14 +27,14 @@
                                 </div>
                                 <label for="cash" class="db-field-label text-heading">{{ $t('label.cash_card') }}</label>
                             </li>
-                            <!-- <li class="flex items-center gap-1.5">
+                            <li class="flex items-center gap-1.5">
                                 <div class="custom-radio">
                                     <input type="radio" id="digital" v-model="paymentMethod" value="digitalPayment"
                                            class="custom-radio-field">
                                     <span class="custom-radio-span border-gray-400"></span>
                                 </div>
                                 <label for="digital" class="db-field-label text-heading">{{ $t('label.digital_payment') }}</label>
-                            </li> -->
+                            </li>
                             <li class="flex items-center gap-1.5">
                                 <div class="custom-radio">
                                     <input type="radio" id="midtrans" v-model="paymentMethod" value="midtrans"
@@ -155,6 +155,7 @@
             </div>
         </div>
     </section>
+    <script src="https://app.midtrans.com/snap/snap.js" data-client-key="YOUR_CLIENT_KEY"></script>
 </template>
 
 
@@ -286,7 +287,7 @@ export default {
 
             if (this.paymentMethod === 'midtrans') {
                 midtransService.processPayment(this.checkoutProps.form).then(response => {
-                    this.handleOrderResponse(response);
+                    this.handleMidtransPayment(response);
                 }).catch(err => {
                     this.handleOrderError(err);
                 });
@@ -297,6 +298,23 @@ export default {
                     this.handleOrderError(err);
                 });
             }
+        },
+        handleMidtransPayment(response) {
+            this.loading.isActive = false;
+            snap.pay(response.data.token, {
+                onSuccess: (result) => {
+                    this.handleOrderResponse(result);
+                },
+                onPending: (result) => {
+                    this.handleOrderResponse(result);
+                },
+                onError: (result) => {
+                    this.handleOrderError(result);
+                },
+                onClose: () => {
+                    this.loading.isActive = false;
+                }
+            });
         },
         handleOrderResponse(orderResponse) {
             this.checkoutProps.form.subtotal = 0;
