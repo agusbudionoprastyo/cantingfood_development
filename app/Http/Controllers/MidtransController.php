@@ -33,6 +33,6 @@ class MidtransController extends Controller
         // Dapatkan token Snap
         $snapToken = Snap::getSnapToken($params);
 
-        return response()->json(['token' => $snapToken]);
+        return response()->json(['data' => ['token' => $snapToken]]);
     }
 }
