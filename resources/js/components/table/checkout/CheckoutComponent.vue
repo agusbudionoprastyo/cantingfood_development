@@ -363,7 +363,7 @@ export default {
             this.checkoutProps.form.items = JSON.stringify(this.checkoutProps.form.items);
 
             // Panggil API backend untuk mendapatkan token Midtrans
-            axios.post('/api/midtrans/token', this.checkoutProps.form)
+            axios.post('/midtrans/token', this.checkoutProps.form)
                 .then(response => {
                     this.loading.isActive = false;
                     snap.pay(response.data.token, {
