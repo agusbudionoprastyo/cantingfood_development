@@ -147,9 +147,6 @@
             </div>
         </div>
     </section>
-    <script type="text/javascript"
-            src="https://app.sandbox.midtrans.com/snap/snap.js"
-            data-client-key="SB-Mid-client-abeEzTnZKSmBXjn1"></script>
 </template>
 
 
@@ -193,9 +190,23 @@ export default {
             },
         }
     },
-    mounted() {
+    async mounted() {
         if (this.$store.getters['tableCart/lists'].length === 0) {
             this.$router.push({name: 'table.menu.table', params: {slug: this.$route.params.slug}});
+        }
+
+        // Memuat skrip Midtrans secara dinamis
+        try {
+            const script = document.createElement('script');
+            script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
+            script.setAttribute('data-client-key', 'SB-Mid-client-abeEzTnZKSmBXjn1');
+            document.head.appendChild(script);
+            await new Promise((resolve, reject) => {
+                script.onload = resolve;
+                script.onerror = reject;
+            });
+        } catch (error) {
+            console.error("Gagal memuat skrip Midtrans:", error);
         }
     },
     computed: {
