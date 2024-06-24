@@ -27,13 +27,21 @@
                                 </div>
                                 <label for="cash" class="db-field-label text-heading">{{ $t('label.cash_card') }}</label>
                             </li>
-                            <li class="flex items-center gap-1.5">
+                            <!-- <li class="flex items-center gap-1.5">
                                 <div class="custom-radio">
                                     <input type="radio" id="digital" v-model="paymentMethod" value="digitalPayment"
                                            class="custom-radio-field">
                                     <span class="custom-radio-span border-gray-400"></span>
                                 </div>
                                 <label for="digital" class="db-field-label text-heading">{{ $t('label.digital_payment') }}</label>
+                            </li> -->
+                            <li class="flex items-center gap-1.5">
+                                <div class="custom-radio">
+                                    <input type="radio" id="midtrans" v-model="paymentMethod" value="midtrans"
+                                           class="custom-radio-field">
+                                    <span class="custom-radio-span border-gray-400"></span>
+                                </div>
+                                <label for="midtrans" class="db-field-label text-heading">{{ $t('label.midtrans') }}</label>
                             </li>
                         </ul>
                     </div>
@@ -160,6 +168,7 @@ import OrderTypeEnum from "../../../enums/modules/orderTypeEnum";
 import IsAdvanceOrderEnum from "../../../enums/modules/isAdvanceOrderEnum";
 import router from "../../../router";
 import alertService from "../../../services/alertService";
+import midtransService from "../../../services/midtransService"; // Import Midtrans service
 
 export default {
     name: "CheckoutComponent",
@@ -275,27 +284,41 @@ export default {
             });
             this.checkoutProps.form.items = JSON.stringify(this.checkoutProps.form.items);
 
-            this.$store.dispatch('tableDiningOrder/save', this.checkoutProps.form).then(orderResponse => {
-                this.checkoutProps.form.subtotal = 0;
-                this.checkoutProps.form.discount = 0;
-                this.checkoutProps.form.delivery_charge = 0;
-                this.checkoutProps.form.delivery_time = null;
-                this.checkoutProps.form.total = 0;
-                this.checkoutProps.form.items = [];
+            if (this.paymentMethod === 'midtrans') {
+                midtransService.processPayment(this.checkoutProps.form).then(response => {
+                    this.handleOrderResponse(response);
+                }).catch(err => {
+                    this.handleOrderError(err);
+                });
+            } else {
+                this.$store.dispatch('tableDiningOrder/save', this.checkoutProps.form).then(orderResponse => {
+                    this.handleOrderResponse(orderResponse);
+                }).catch(err => {
+                    this.handleOrderError(err);
+                });
+            }
+        },
+        handleOrderResponse(orderResponse) {
+            this.checkoutProps.form.subtotal = 0;
+            this.checkoutProps.form.discount = 0;
+            this.checkoutProps.form.delivery_charge = 0;
+            this.checkoutProps.form.delivery_time = null;
+            this.checkoutProps.form.total = 0;
+            this.checkoutProps.form.items = [];
 
-                this.$store.dispatch('tableCart/resetCart').then(res => {
-                    this.loading.isActive = false;
-                    this.$store.dispatch('tableCart/paymentMethod', this.paymentMethod).then().catch();
-                    router.push({name: "table.menu.table", params: {slug : this.table.slug}, query: {id: orderResponse.data.data.id}});
-                }).catch();
-            }).catch((err) => {
+            this.$store.dispatch('tableCart/resetCart').then(res => {
                 this.loading.isActive = false;
-                if (typeof err.response.data.errors === 'object') {
-                    _.forEach(err.response.data.errors, (error) => {
-                        alertService.error(error[0]);
-                    });
-                }
-            })
+                this.$store.dispatch('tableCart/paymentMethod', this.paymentMethod).then().catch();
+                router.push({name: "table.menu.table", params: {slug : this.table.slug}, query: {id: orderResponse.data.data.id}});
+            }).catch();
+        },
+        handleOrderError(err) {
+            this.loading.isActive = false;
+            if (typeof err.response.data.errors === 'object') {
+                _.forEach(err.response.data.errors, (error) => {
+                    alertService.error(error[0]);
+                });
+            }
         }
     }
 
