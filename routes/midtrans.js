@@ -5,8 +5,8 @@ const midtransClient = require('midtrans-client');
 // Inisialisasi Snap client
 let snap = new midtransClient.Snap({
     isProduction: false,
-    serverKey: 'YOUR_SERVER_KEY',
-    clientKey: 'YOUR_CLIENT_KEY'
+    serverKey: 'SB-Mid-server-tXFXDeXhTKaEXOQmyQsFN4q8',
+    clientKey: 'SB-Mid-client-abeEzTnZKSmBXjn1'
 });
 
 router.post('/charge', (req, res) => {
