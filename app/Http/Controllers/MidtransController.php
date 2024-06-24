@@ -13,6 +13,7 @@ class MidtransController extends Controller
         // Validasi input
         $request->validate([
             'subtotal' => 'required|numeric|min:1',
+            'total_tax' => 'required|numeric|min:0', // Tambahkan validasi untuk total_tax
         ]);
 
         // Set konfigurasi Midtrans
@@ -25,11 +26,11 @@ class MidtransController extends Controller
         $params = [
             'transaction_details' => [
                 'order_id' => uniqid(),
-                'gross_amount' => $request->subtotal,
+                'gross_amount' => $request->subtotal + $request->total_tax, // Tambahkan total_tax ke gross_amount
             ],
             'customer_details' => [
-                'first_name' => 'Customer',
-                'last_name' => 'Name',
+                'first_name' => 'Walking',
+                'last_name' => 'Customer',
                 'email' => 'customer@example.com',
                 'phone' => '081234567890',
             ],
