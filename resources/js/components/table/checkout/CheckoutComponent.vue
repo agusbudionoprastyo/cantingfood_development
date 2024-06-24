@@ -40,7 +40,7 @@
 
                     <button type="button"
                             class="hidden md:block w-full rounded-3xl capitalize font-medium leading-6 py-3 text-white bg-primary"
-                            @click="orderSubmit">
+                            @click="payWithMidtrans">
                         {{ $t('button.place_order') }}
                     </button>
                 </div>
@@ -138,7 +138,7 @@
                             </div>
                             <button type="button"
                                     class="block md:hidden w-full rounded-3xl capitalize font-medium leading-6 py-3 text-white bg-primary"
-                                    @click="orderSubmit">
+                                    @click="payWithMidtrans">
                                 {{ $t('button.place_order') }}
                             </button>
                         </div>
@@ -147,6 +147,9 @@
             </div>
         </div>
     </section>
+    <script type="text/javascript"
+            src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="SB-Mid-client-abeEzTnZKSmBXjn1"></script>
 </template>
 
 
@@ -213,7 +216,7 @@ export default {
         currencyFormat: function (amount, decimal, currency, position) {
             return appService.currencyFormat(amount, decimal, currency, position);
         },
-        orderSubmit: function () {
+        orderSubmit: function (result) {
             this.loading.isActive = true;
             this.checkoutProps.form.dining_table_id = this.table.id;
             this.checkoutProps.form.branch_id = this.table.branch_id;
@@ -296,6 +299,89 @@ export default {
                     });
                 }
             })
+        },
+        payWithMidtrans: function () {
+            this.loading.isActive = true;
+            this.checkoutProps.form.dining_table_id = this.table.id;
+            this.checkoutProps.form.branch_id = this.table.branch_id;
+            this.checkoutProps.form.subtotal  = this.subtotal;
+            this.checkoutProps.form.total     = parseFloat(this.subtotal).toFixed(this.setting.site_digit_after_decimal_point);
+            this.checkoutProps.form.items     = [];
+            _.forEach(this.carts, (item, index) => {
+                let item_variations = [];
+                if (Object.keys(item.item_variations.variations).length > 0) {
+                    _.forEach(item.item_variations.variations, (value, index) => {
+                        item_variations.push({
+                            "id": value,
+                            "item_id": item.item_id,
+                            "item_attribute_id": index,
+                        });
+                    });
+                }
+
+                if (Object.keys(item.item_variations.names).length > 0) {
+                    let i = 0;
+                    _.forEach(item.item_variations.names, (value, index) => {
+                        item_variations[i].variation_name = index;
+                        item_variations[i].name           = value;
+                        i++;
+                    });
+                }
+
+                let item_extras = [];
+                if (item.item_extras.extras.length) {
+                    _.forEach(item.item_extras.extras, (value) => {
+                        item_extras.push({
+                            id: value,
+                            item_id: item.item_id,
+                        });
+                    });
+                }
+
+                if (item.item_extras.names.length) {
+                    let i = 0;
+                    _.forEach(item.item_extras.names, (value) => {
+                        item_extras[i].name = value;
+                        i++;
+                    });
+                }
+
+                this.checkoutProps.form.items.push({
+                    item_id: item.item_id,
+                    item_price: item.convert_price,
+                    branch_id: this.checkoutProps.form.branch_id,
+                    instruction: item.instruction,
+                    quantity: item.quantity,
+                    discount: item.discount,
+                    total_price: item.total,
+                    item_variation_total: item.item_variation_total,
+                    item_extra_total: item.item_extra_total,
+                    item_variations: item_variations,
+                    item_extras: item_extras
+                });
+            });
+            this.checkoutProps.form.items = JSON.stringify(this.checkoutProps.form.items);
+
+            // Panggil API backend untuk mendapatkan token Midtrans
+            axios.post('/api/midtrans/token', this.checkoutProps.form)
+                .then(response => {
+                    this.loading.isActive = false;
+                    snap.pay(response.data.token, {
+                        onSuccess: (result) => {
+                            this.orderSubmit(result);
+                        },
+                        onPending: (result) => {
+                            this.orderSubmit(result);
+                        },
+                        onError: (result) => {
+                            alertService.error(result.status_message);
+                        }
+                    });
+                })
+                .catch(error => {
+                    this.loading.isActive = false;
+                    alertService.error(error.response.data.message);
+                });
         }
     }
 
