@@ -369,17 +369,21 @@ export default {
                     this.loading.isActive = false;
                     const token = response.data.data.token; // Pastikan token diambil dengan benar
                     console.log(token); // Tambahkan log ini untuk memeriksa token
-                    window.snap.pay(token, {
-                        onSuccess: (result) => {
-                            this.orderSubmit(result);
-                        },
-                        onPending: (result) => {
-                            this.orderSubmit(result);
-                        },
-                        onError: (result) => {
-                            alertService.error(result.status_message);
-                        }
-                    });
+                    if (window.snap) {
+                        window.snap.pay(token, {
+                            onSuccess: (result) => {
+                                this.orderSubmit(result);
+                            },
+                            onPending: (result) => {
+                                this.orderSubmit(result);
+                            },
+                            onError: (result) => {
+                                alertService.error(result.status_message);
+                            }
+                        });
+                    } else {
+                        alertService.error("Midtrans snap.js tidak tersedia.");
+                    }
                 })
                 .catch(error => {
                     console.log(error); // Tambahkan log ini untuk memeriksa error
