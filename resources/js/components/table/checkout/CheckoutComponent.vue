@@ -15,7 +15,6 @@
                         <p class="capitalize p-4 text-heading">{{ $t('label.inside') }} - {{ table.name }}</p>
                     </div>
 
-
                     <div class="mb-6 rounded-2xl shadow-xs bg-white">
                         <h3 class="capitalize font-medium p-4 border-b border-gray-100">{{ $t('label.payment') }}</h3>
                         <ul class="p-4 flex flex-col gap-5">
@@ -130,7 +129,7 @@
                                             {{
                                                 currencyFormat(subtotal * 0.21, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position)
                                             }}
-                                        </span>
+                                                               </span>
                                     </li>
                                 </ul>
                                 <div class="flex items-center justify-between p-3">
@@ -158,9 +157,7 @@
     <script src="https://app.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-abeEzTnZKSmBXjn1"></script>
 </template>
 
-
 <script>
-
 import LoadingComponent from "../../table/components/LoadingComponent.vue";
 import appService from "../../../services/appService";
 import sourceEnum from "../../../enums/modules/sourceEnum";
@@ -339,6 +336,5 @@ export default {
             }
         }
     }
-
 }
 </script>
