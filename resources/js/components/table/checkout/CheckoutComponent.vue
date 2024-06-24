@@ -369,7 +369,7 @@ export default {
                     this.loading.isActive = false;
                     const token = response.data.data.token; // Pastikan token diambil dengan benar
                     console.log(token); // Tambahkan log ini untuk memeriksa token
-                    snap.pay(token, {
+                    window.snap.pay(token, {
                         onSuccess: (result) => {
                             this.orderSubmit(result);
                         },
