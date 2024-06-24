@@ -365,8 +365,11 @@ export default {
             // Panggil API backend untuk mendapatkan token Midtrans
             axios.post('/midtrans/token', this.checkoutProps.form)
                 .then(response => {
+                    console.log(response); // Tambahkan log ini untuk memeriksa respons
                     this.loading.isActive = false;
-                    snap.pay(response.data.token, {
+                    const token = response.data.data.token; // Pastikan token diambil dengan benar
+                    console.log(token); // Tambahkan log ini untuk memeriksa token
+                    snap.pay(token, {
                         onSuccess: (result) => {
                             this.orderSubmit(result);
                         },
@@ -379,6 +382,7 @@ export default {
                     });
                 })
                 .catch(error => {
+                    console.log(error); // Tambahkan log ini untuk memeriksa error
                     this.loading.isActive = false;
                     alertService.error(error.response.data.message);
                 });
