@@ -1,13 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const midtransRoutes = require('./routes/midtrans'); // Import rute Midtrans
+const midtransRoutes = require('./routes/midtrans');
 
 const app = express();
+const port = process.env.PORT || 3000;
 
-app.use(bodyParser.json()); // Middleware untuk parsing JSON
-app.use('/midtrans', midtransRoutes); // Gunakan rute Midtrans
+app.use(bodyParser.json());
+app.use('/midtrans', midtransRoutes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
