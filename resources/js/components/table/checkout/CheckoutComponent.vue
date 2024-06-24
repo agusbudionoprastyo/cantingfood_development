@@ -154,7 +154,7 @@
 
 
 <script>
-
+import axios from 'axios';
 import LoadingComponent from "../../table/components/LoadingComponent.vue";
 import appService from "../../../services/appService";
 import sourceEnum from "../../../enums/modules/sourceEnum";
