@@ -15,6 +15,7 @@
                         <p class="capitalize p-4 text-heading">{{ $t('label.inside') }} - {{ table.name }}</p>
                     </div>
 
+
                     <div class="mb-6 rounded-2xl shadow-xs bg-white">
                         <h3 class="capitalize font-medium p-4 border-b border-gray-100">{{ $t('label.payment') }}</h3>
                         <ul class="p-4 flex flex-col gap-5">
@@ -26,22 +27,14 @@
                                 </div>
                                 <label for="cash" class="db-field-label text-heading">{{ $t('label.cash_card') }}</label>
                             </li>
-                            <li class="flex items-center gap-1.5">
+                            <!-- <li class="flex items-center gap-1.5">
                                 <div class="custom-radio">
                                     <input type="radio" id="digital" v-model="paymentMethod" value="digitalPayment"
                                            class="custom-radio-field">
                                     <span class="custom-radio-span border-gray-400"></span>
                                 </div>
                                 <label for="digital" class="db-field-label text-heading">{{ $t('label.digital_payment') }}</label>
-                            </li>
-                            <li class="flex items-center gap-1.5">
-                                <div class="custom-radio">
-                                    <input type="radio" id="midtrans" v-model="paymentMethod" value="midtrans"
-                                           class="custom-radio-field">
-                                    <span class="custom-radio-span border-gray-400"></span>
-                                </div>
-                                <label for="midtrans" class="db-field-label text-heading">{{ $t('label.midtrans') }}</label>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
 
@@ -54,6 +47,7 @@
 
                 <div class="col-12 md:col-5">
                     <div class="rounded-2xl shadow-xs bg-white">
+                        <!-- <div class="p-4 border-b"> -->
                         <div class="p-4">
                             <h3 class="capitalize font-medium mb-3 text-center">
                                 {{ $t('label.cart_summary') }}
@@ -107,7 +101,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="p-4">
                             <div class="rounded-xl mb-6 border border-[#EFF0F6]">
                                 <ul class="flex flex-col gap-2 p-3 border-b border-dashed border-[#EFF0F6]">
@@ -129,7 +122,7 @@
                                             {{
                                                 currencyFormat(subtotal * 0.21, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position)
                                             }}
-                                                               </span>
+                                        </span>
                                     </li>
                                 </ul>
                                 <div class="flex items-center justify-between p-3">
@@ -154,10 +147,11 @@
             </div>
         </div>
     </section>
-    <script src="https://app.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-abeEzTnZKSmBXjn1"></script>
 </template>
 
+
 <script>
+
 import LoadingComponent from "../../table/components/LoadingComponent.vue";
 import appService from "../../../services/appService";
 import sourceEnum from "../../../enums/modules/sourceEnum";
@@ -166,7 +160,6 @@ import OrderTypeEnum from "../../../enums/modules/orderTypeEnum";
 import IsAdvanceOrderEnum from "../../../enums/modules/isAdvanceOrderEnum";
 import router from "../../../router";
 import alertService from "../../../services/alertService";
-import midtransService from "../../../services/midtransService"; // Import Midtrans service
 
 export default {
     name: "CheckoutComponent",
@@ -282,59 +275,29 @@ export default {
             });
             this.checkoutProps.form.items = JSON.stringify(this.checkoutProps.form.items);
 
-            if (this.paymentMethod === 'midtrans') {
-                midtransService.processPayment(this.checkoutProps.form).then(response => {
-                    this.handleMidtransPayment(response);
-                }).catch(err => {
-                    this.handleOrderError(err);
-                });
-            } else {
-                this.$store.dispatch('tableDiningOrder/save', this.checkoutProps.form).then(orderResponse => {
-                    this.handleOrderResponse(orderResponse);
-                }).catch(err => {
-                    this.handleOrderError(err);
-                });
-            }
-        },
-        handleMidtransPayment(response) {
-            this.loading.isActive = false;
-            snap.pay(response.data.token, {
-                onSuccess: (result) => {
-                    this.handleOrderResponse(result);
-                },
-                onPending: (result) => {
-                    this.handleOrderResponse(result);
-                },
-                onError: (result) => {
-                    this.handleOrderError(result);
-                },
-                onClose: () => {
-                    this.loading.isActive = false;
-                }
-            });
-        },
-        handleOrderResponse(orderResponse) {
-            this.checkoutProps.form.subtotal = 0;
-            this.checkoutProps.form.discount = 0;
-            this.checkoutProps.form.delivery_charge = 0;
-            this.checkoutProps.form.delivery_time = null;
-            this.checkoutProps.form.total = 0;
-            this.checkoutProps.form.items = [];
+            this.$store.dispatch('tableDiningOrder/save', this.checkoutProps.form).then(orderResponse => {
+                this.checkoutProps.form.subtotal = 0;
+                this.checkoutProps.form.discount = 0;
+                this.checkoutProps.form.delivery_charge = 0;
+                this.checkoutProps.form.delivery_time = null;
+                this.checkoutProps.form.total = 0;
+                this.checkoutProps.form.items = [];
 
-            this.$store.dispatch('tableCart/resetCart').then(res => {
+                this.$store.dispatch('tableCart/resetCart').then(res => {
+                    this.loading.isActive = false;
+                    this.$store.dispatch('tableCart/paymentMethod', this.paymentMethod).then().catch();
+                    router.push({name: "table.menu.table", params: {slug : this.table.slug}, query: {id: orderResponse.data.data.id}});
+                }).catch();
+            }).catch((err) => {
                 this.loading.isActive = false;
-                this.$store.dispatch('tableCart/paymentMethod', this.paymentMethod).then().catch();
-                router.push({name: "table.menu.table", params: {slug : this.table.slug}, query: {id: orderResponse.data.data.id}});
-            }).catch();
-        },
-        handleOrderError(err) {
-            this.loading.isActive = false;
-            if (typeof err.response.data.errors === 'object') {
-                _.forEach(err.response.data.errors, (error) => {
-                    alertService.error(error[0]);
-                });
-            }
+                if (typeof err.response.data.errors === 'object') {
+                    _.forEach(err.response.data.errors, (error) => {
+                        alertService.error(error[0]);
+                    });
+                }
+            })
         }
     }
+
 }
 </script>
