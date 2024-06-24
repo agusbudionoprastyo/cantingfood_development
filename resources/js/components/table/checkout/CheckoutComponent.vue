@@ -27,20 +27,20 @@
                                 </div>
                                 <label for="cash" class="db-field-label text-heading">{{ $t('label.cash_card') }}</label>
                             </li>
-                            <!-- <li class="flex items-center gap-1.5">
+                            <li class="flex items-center gap-1.5">
                                 <div class="custom-radio">
                                     <input type="radio" id="digital" v-model="paymentMethod" value="digitalPayment"
                                            class="custom-radio-field">
                                     <span class="custom-radio-span border-gray-400"></span>
                                 </div>
                                 <label for="digital" class="db-field-label text-heading">{{ $t('label.digital_payment') }}</label>
-                            </li> -->
+                            </li>
                         </ul>
                     </div>
 
                     <button type="button"
                             class="hidden md:block w-full rounded-3xl capitalize font-medium leading-6 py-3 text-white bg-primary"
-                            @click="payWithMidtrans">
+                            @click="paymentMethod === 'digitalPayment' ? payWithMidtrans() : orderSubmit()">
                         {{ $t('button.place_order') }}
                     </button>
                 </div>
@@ -138,7 +138,7 @@
                             </div>
                             <button type="button"
                                     class="block md:hidden w-full rounded-3xl capitalize font-medium leading-6 py-3 text-white bg-primary"
-                                    @click="payWithMidtrans">
+                                    @click="paymentMethod === 'digitalPayment' ? payWithMidtrans() : orderSubmit()">
                                 {{ $t('button.place_order') }}
                             </button>
                         </div>
@@ -312,6 +312,10 @@ export default {
             })
         },
         payWithMidtrans: function () {
+            if (this.paymentMethod !== 'digitalPayment') {
+                this.orderSubmit();
+                return;
+            }
             this.loading.isActive = true;
             this.checkoutProps.form.dining_table_id = this.table.id;
             this.checkoutProps.form.branch_id = this.table.branch_id;
