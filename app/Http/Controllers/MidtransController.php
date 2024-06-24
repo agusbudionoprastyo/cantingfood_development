@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\PaymentGateways\midtrans\Midtrans\Config;
-use App\Http\PaymentGateways\midtrans\Midtrans\Snap;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class MidtransController extends Controller
 {
