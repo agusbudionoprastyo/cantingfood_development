@@ -35,7 +35,8 @@
         "stripe/stripe-php": "^10.11",
         "twilio/sdk": "^7.0",
         "unicodeveloper/laravel-paystack": "^1.1",
-        "vonage/client": "^4.0"
+        "vonage/client": "^4.0",
+        "midtrans/midtrans-php": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.8",

@@ -68,6 +68,7 @@ use App\Http\Controllers\Admin\TableOrderController as AdminTableOrderController
 use App\Http\Controllers\Frontend\LanguageController as FrontendLanguageController;
 use App\Http\Controllers\Table\DiningTableController as TableDiningTableController;
 use App\Http\Controllers\Table\ItemCategoryController as TableItemCategoryController;
+use App\Http\Controllers\MidtransController;
 
 
 /*
@@ -532,3 +533,4 @@ Route::prefix('table')->name('table.')->middleware(['installed', 'apiKey', 'loca
         Route::post('/', [TableOrderController::class, 'store']);
     });
 });
+Route::post('/midtrans/token', [MidtransController::class, 'getToken']);
