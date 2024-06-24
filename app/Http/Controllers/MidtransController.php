@@ -10,6 +10,11 @@ class MidtransController extends Controller
 {
     public function getToken(Request $request)
     {
+        // Validasi input
+        $request->validate([
+            'subtotal' => 'required|numeric|min:1',
+        ]);
+
         // Set konfigurasi Midtrans
         Config::$serverKey = 'SB-Mid-server-tXFXDeXhTKaEXOQmyQsFN4q8';
         Config::$isProduction = false;
@@ -20,7 +25,7 @@ class MidtransController extends Controller
         $params = [
             'transaction_details' => [
                 'order_id' => uniqid(),
-                'gross_amount' => $request->total,
+                'gross_amount' => $request->subtotal,
             ],
             'customer_details' => [
                 'first_name' => 'Customer',
