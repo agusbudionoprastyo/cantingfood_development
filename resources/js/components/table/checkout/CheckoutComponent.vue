@@ -321,7 +321,7 @@ export default {
         async testEndpoint() {
             const url = 'https://wagateway.dafamsemarang.my.id/send-group-message';
             const payload = {
-                message: `Item: ${this.carts.map(cart => cart.quantity + ' ' + cart.name).join(', ')}, Subtotal: ${this.subtotal}, Table ID: ${this.table.name}`,
+                message: `*Hai canting, ada pesanan baru nih! Room/Table ${this.table.name}*\n\n _Item_\n ${this.carts.map(cart => cart.quantity + ' ' + cart.name).join(', ')}\n _Subtotal_ ${this.subtotal}\n _Tax & Service_ \n ${this.subtotal * 0.21} 21% \n _Total_\n ${this.subtotal * 1.21}\n _klik tautan berikut untuk mengkonfirmasi pesanan_\n https://cantingfood.my.id\n _Thankyou & happy working_`,
                 id_group: '120363304142052316@g.us'
             };
 
@@ -332,7 +332,7 @@ export default {
                 const response = await axios.post(url, new URLSearchParams(payload), {
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
-                    }
+                    }   
                 });
 
                 console.log('Test endpoint berhasil:', response.data);
