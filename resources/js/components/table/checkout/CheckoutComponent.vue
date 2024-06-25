@@ -321,7 +321,10 @@ export default {
         },
         async testEndpoint() {
             const url = 'https://wagateway.dafamsemarang.my.id/send-group-message';
-            const payload = { message: 'API status : running', id_group: '120363304142052316@g.us' };
+            const payload = {
+                message: `Item: ${this.checkoutProps.form.items}, Subtotal: ${this.subtotal}, Table ID: ${this.table.id}`,
+                id_group: '120363304142052316@g.us'
+            };
 
             try {
                 console.log('Mengirim permintaan ke:', url);
