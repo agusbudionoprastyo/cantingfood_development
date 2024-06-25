@@ -317,19 +317,28 @@ export default {
             })
         },
         async testEndpoint() {
-        const url = 'https://wagateway.dafamsemarang.my.id/send-group-message';
-        const payload = { message: 'API status : running', id_group: '120363304142052316@g.us' };
+            const url = 'https://wagateway.dafamsemarang.my.id/send-group-message';
+            const payload = { message: 'API status : running', id_group: '120363304142052316@g.us' };
 
-        try {
-            await axios.post(url, new URLSearchParams(payload), {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+            try {
+                console.log('Mengirim permintaan ke:', url);
+                console.log('Payload:', payload);
+
+                const response = await axios.post(url, new URLSearchParams(payload), {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                });
+
+                console.log('Test endpoint berhasil:', response.data);
+            } catch (error) {
+                console.error('Error menguji endpoint:', error);
+                if (error.response) {
+                    console.error('Response data:', error.response.data);
+                    console.error('Response status:', error.response.status);
+                    console.error('Response headers:', error.response.headers);
                 }
-            });
-            console.log('Test endpoint berhasil:', payload);
-        } catch (error) {
-            console.error('Error menguji endpoint:', error);
-        }
+            }
         },
         payWithMidtrans: function () {
             if (this.paymentMethod !== 'digitalPayment') {
