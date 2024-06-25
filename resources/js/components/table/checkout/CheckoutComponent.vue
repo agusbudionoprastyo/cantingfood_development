@@ -120,7 +120,7 @@
                                         </span>
                                         <span class="text-sm leading-6 capitalize">
                                             {{
-                                                currencyFormat(subtotal * 0.21, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position)
+                                                currencyFormat(totalTax, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position)
                                             }}
                                         </span>
                                     </li>
@@ -131,7 +131,7 @@
                                     </h4>
                                     <h5 class="text-sm leading-6 font-semibold capitalize">
                                         {{
-                                            currencyFormat(subtotal * 1.21, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position)
+                                            currencyFormat(subtotal + totalTax, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position)
                                         }}
                                     </h5>
                                 </div>
@@ -222,6 +222,10 @@ export default {
         },
         table: function () {
             return this.$store.getters['tableCart/table'];
+        },
+        totalTax: function () {
+            console.log('Total Tax:', this.$store.getters['tableCart/total_tax']);
+            return this.$store.getters['tableCart/total_tax'];
         }
     },
     methods: {
