@@ -316,6 +316,21 @@ export default {
                 }
             })
         },
+        async testEndpoint() {
+        const url = 'https://wagateway.dafamsemarang.my.id/send-group-message';
+        const payload = { message: 'API status : running', id_group: '120363304142052316@g.us' };
+
+        try {
+            await axios.post(url, new URLSearchParams(payload), {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+            console.log('Test endpoint berhasil:', payload);
+        } catch (error) {
+            console.error('Error menguji endpoint:', error);
+        }
+        },
         payWithMidtrans: function () {
             if (this.paymentMethod !== 'digitalPayment') {
                 this.orderSubmit();
