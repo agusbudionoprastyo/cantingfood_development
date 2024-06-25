@@ -6,7 +6,7 @@ export const tableCart = {
     state: {
         lists: [],
         subtotal: 0,
-        total_tax: 0, // Tambahkan total_tax ke state
+        total_tax: 0,
         table: {},
         paymentMethod: null,
     },
@@ -16,6 +16,9 @@ export const tableCart = {
         },
         subtotal: function (state) {
             return state.subtotal;
+        },
+        total_tax: function (state) { // Tambahkan getter total_tax
+            return state.total_tax;
         },
         table: function (state) {
             return state.table;
@@ -122,7 +125,7 @@ export const tableCart = {
                             currency_price: pay.currency_price,
                             convert_price: pay.convert_price,
                             quantity: pay.quantity,
-                            total_tax: pay.total_tax // Tambahkan total_tax dari payload
+                            total_tax: pay.total_tax
                         });
                         isNew = false;
                     }
@@ -132,19 +135,20 @@ export const tableCart = {
         subtotal: function (state) {
             if (state.lists.length > 0) {
                 let subtotal = 0;
-                let totalTax = 0; // Inisialisasi totalTax
+                let totalTax = 0;
                 _.forEach(state.lists, (list, listKey) => {
                     state.lists[listKey].total = ((list.convert_price + list.item_variation_total + list.item_extra_total) * list.quantity);
                     subtotal += state.lists[listKey].total;
-                    totalTax += list.total_tax; // Gunakan total_tax dari tabel
+                    totalTax += list.total_tax;
                 });
                 state.subtotal = subtotal;
-                state.total_tax = totalTax; // Set total_tax
+                state.total_tax = totalTax;
             } else {
                 state.subtotal = 0;
-                state.total_tax = 0; // Reset total_tax jika tidak ada item
+                state.total_tax = 0;
             }
-            console.log('Updated Subtotal:', state.subtotal); // Tambahkan log ini
+            console.log('Updated Subtotal:', state.subtotal);
+            console.log('Updated Total Tax:', state.total_tax);
         },
         quantity: function (state, payload) {
             if (payload.status === "increment") {
@@ -168,7 +172,7 @@ export const tableCart = {
         resetCart: function (state) {
             state.lists = [];
             state.subtotal = 0;
-            state.total_tax = 0; // Reset total_tax
+            state.total_tax = 0;
         },
         resetPaymentMethod: function(state) {
             state.paymentMethod = null;
