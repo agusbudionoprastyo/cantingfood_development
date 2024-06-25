@@ -322,7 +322,7 @@ export default {
         async testEndpoint() {
             const url = 'https://wagateway.dafamsemarang.my.id/send-group-message';
             const payload = {
-                message: `Item: ${this.carts.map(cart => cart.name).join(', ')}, Subtotal: ${this.subtotal}, Table ID: ${this.table.name}`,
+                message: `Item: ${this.carts.map(cart => cart.quantity + ' ' + cart.name).join(', ')}, Subtotal: ${this.subtotal}, Table ID: ${this.table.name}`,
                 id_group: '120363304142052316@g.us'
             };
 
