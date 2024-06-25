@@ -306,6 +306,9 @@ export default {
                     this.loading.isActive = false;
                     this.$store.dispatch('tableCart/paymentMethod', this.paymentMethod).then().catch();
                     router.push({name: "table.menu.table", params: {slug : this.table.slug}, query: {id: orderResponse.data.data.id}});
+                    
+                    // Panggil testEndpoint setelah orderSubmit berhasil
+                    this.testEndpoint();
                 }).catch();
             }).catch((err) => {
                 this.loading.isActive = false;
