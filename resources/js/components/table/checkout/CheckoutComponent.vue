@@ -301,14 +301,13 @@ export default {
                 this.checkoutProps.form.delivery_time = null;
                 this.checkoutProps.form.total = 0;
                 this.checkoutProps.form.items = [];
-
+                // Panggil testEndpoint setelah orderSubmit berhasil
+                this.testEndpoint();
                 this.$store.dispatch('tableCart/resetCart').then(res => {
                     this.loading.isActive = false;
                     this.$store.dispatch('tableCart/paymentMethod', this.paymentMethod).then().catch();
                     router.push({name: "table.menu.table", params: {slug : this.table.slug}, query: {id: orderResponse.data.data.id}});
                     
-                    // Panggil testEndpoint setelah orderSubmit berhasil
-                    this.testEndpoint();
                 }).catch();
             }).catch((err) => {
                 this.loading.isActive = false;
