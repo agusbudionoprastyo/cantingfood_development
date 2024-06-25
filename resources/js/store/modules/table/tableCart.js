@@ -125,7 +125,7 @@ export const tableCart = {
                             currency_price: pay.currency_price,
                             convert_price: pay.convert_price,
                             quantity: pay.quantity,
-                            total_tax: pay.total_tax
+                            total_tax: pay.total_tax // Pastikan total_tax ada di payload
                         });
                         isNew = false;
                     }
@@ -139,16 +139,16 @@ export const tableCart = {
                 _.forEach(state.lists, (list, listKey) => {
                     state.lists[listKey].total = ((list.convert_price + list.item_variation_total + list.item_extra_total) * list.quantity);
                     subtotal += state.lists[listKey].total;
-                    totalTax += list.total_tax;
+                    totalTax += list.total_tax; // Pastikan totalTax diperbarui dengan benar
                 });
                 state.subtotal = subtotal;
-                state.total_tax = totalTax;
+                state.total_tax = totalTax; // Pastikan total_tax diperbarui dengan benar
             } else {
                 state.subtotal = 0;
                 state.total_tax = 0;
             }
             console.log('Updated Subtotal:', state.subtotal);
-            console.log('Updated Total Tax:', state.total_tax);
+            console.log('Updated Total Tax:', state.total_tax); // Tambahkan log untuk memeriksa nilai total_tax
         },
         quantity: function (state, payload) {
             if (payload.status === "increment") {
