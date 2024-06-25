@@ -144,6 +144,7 @@ export const tableCart = {
                 state.subtotal = 0;
                 state.total_tax = 0; // Reset total_tax jika tidak ada item
             }
+            console.log('Updated Subtotal:', state.subtotal); // Tambahkan log ini
         },
         quantity: function (state, payload) {
             if (payload.status === "increment") {
