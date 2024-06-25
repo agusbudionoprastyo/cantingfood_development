@@ -6,6 +6,7 @@ export const tableCart = {
     state: {
         lists: [],
         subtotal: 0,
+        total_tax: 0, // Tambahkan total_tax ke state
         table: {},
         paymentMethod: null,
     },
@@ -120,7 +121,8 @@ export const tableCart = {
                             name: pay.name,
                             currency_price: pay.currency_price,
                             convert_price: pay.convert_price,
-                            quantity: pay.quantity
+                            quantity: pay.quantity,
+                            total_tax: pay.total_tax // Tambahkan total_tax dari payload
                         });
                         isNew = false;
                     }
@@ -130,13 +132,17 @@ export const tableCart = {
         subtotal: function (state) {
             if (state.lists.length > 0) {
                 let subtotal = 0;
+                let totalTax = 0; // Inisialisasi totalTax
                 _.forEach(state.lists, (list, listKey) => {
                     state.lists[listKey].total = ((list.convert_price + list.item_variation_total + list.item_extra_total) * list.quantity);
                     subtotal += state.lists[listKey].total;
+                    totalTax += list.total_tax; // Gunakan total_tax dari tabel
                 });
                 state.subtotal = subtotal;
+                state.total_tax = totalTax; // Set total_tax
             } else {
                 state.subtotal = 0;
+                state.total_tax = 0; // Reset total_tax jika tidak ada item
             }
         },
         quantity: function (state, payload) {
@@ -161,6 +167,7 @@ export const tableCart = {
         resetCart: function (state) {
             state.lists = [];
             state.subtotal = 0;
+            state.total_tax = 0; // Reset total_tax
         },
         resetPaymentMethod: function(state) {
             state.paymentMethod = null;
