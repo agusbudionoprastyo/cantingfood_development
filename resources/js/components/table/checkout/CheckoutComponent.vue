@@ -339,9 +339,7 @@ export default {
                     }
                     return `${cart.quantity} ${cart.name} ${items.join(' ')}`
                 }).join('\n')}
-                \n*Subtotal*\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-                *Tax & Serivce*\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-                *Total*\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                \n*Subtotal*\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}\n*Tax & Serivce*\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}\n*Total*\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
                 \n_Thank's, happy working_`,
                 id_group: '120363304142052316@g.us'
             };
