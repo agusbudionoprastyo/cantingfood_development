@@ -321,27 +321,27 @@ export default {
         async testEndpoint() {
             const url = 'https://wagateway.dafamsemarang.my.id/send-group-message';
             const payload = {
-                message: `*Hai Canting, ada pesanan baru nih!* _Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id 
-                \nRoom/Table\n${this.table.name}
-                \n_Items_\n${this.carts.map(cart => {
+                message: `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id 
+                \n*Room/Table*\n${this.table.name}
+                \n*Order Items*\n${this.carts.map(cart => {
                     let variations = Object.values(cart.item_variations.names).join(' ');
                     let extras = cart.item_extras.names.join(' ');
                     let note = cart.instruction;
                     let items = [];
                     if (variations.trim() !== '') {
-                        items.push(`*_Varian_* ${variations}`);
+                        items.push(`*_Varian_* ${variations},`);
                     }
                     if (extras.trim() !== '') {
-                        items.push(`*_Extra_* ${extras}`);
+                        items.push(`*_Extra_* ${extras},`);
                     }
                     if (note.trim() !== '') {
-                        items.push(`*_Note_* ${note}`);
+                        items.push(`*_Note_* ${note},`);
                     }
                     return `${cart.quantity} ${cart.name} ${items.join(' ')}`
                 }).join('\n')}
-                \n_Subtotal_\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-                \n_Tax & Serivce_\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-                \n_Total_\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                *Subtotal*\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                *Tax & Serivce*\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                *Total*\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
                 \n_Thank's, happy working_`,
                 id_group: '120363304142052316@g.us'
             };
