@@ -321,7 +321,7 @@ export default {
         async testEndpoint() {
             const url = 'https://wagateway.dafamsemarang.my.id/send-group-message';
             const payload = {
-                message: `*Hai Canting, ada pesanan baru nih!* 
+                message: `*Hai Canting, ada pesanan baru nih!* _Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id 
                 \nRoom/Table\n${this.table.name}
                 \n_Items_\n${this.carts.map(cart => {
                     let variations = Object.values(cart.item_variations.names).join(' ');
@@ -338,11 +338,10 @@ export default {
                         items.push(`*_Note_* ${note}`);
                     }
                     return `${cart.quantity} ${cart.name} ${items.join(' ')}`
-                }).join(', ')}
+                }).join('\n')}
                 \n_Subtotal_\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
                 \n_Tax & Serivce_\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
                 \n_Total_\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-                \n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id
                 \n_Thank's, happy working_`,
                 id_group: '120363304142052316@g.us'
             };
