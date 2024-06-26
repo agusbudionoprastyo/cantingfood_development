@@ -323,7 +323,7 @@ export default {
             const payload = {
                 message: `*Hai Canting, ada pesanan baru nih!* 
                 \nRoom/Table\n${this.table.name}
-                \n_Items_\n${this.carts.map(cart => cart.quantity + ' ' + cart.name + ' ' + cart.item_variations.names + ' ' + cart.item_extras.names + ' ' + cart.instruction).join(', ')}
+                \n_Items_\n${this.carts.map(cart => cart.quantity + ' ' + cart.name + ' ' + Object.values(cart.item_variations.names).join(' ') + ' ' + $t('label.extras') + ' ' + cart.item_extras.names + ' ' + cart.instruction).join(', ')}
                 \n_Subtotal_\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
                 \n_Tax & Serivce_\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
                 \n_Total_\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
