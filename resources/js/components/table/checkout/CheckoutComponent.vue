@@ -335,11 +335,11 @@ export default {
                         items.push(`*_Extra_* ${extras},`);
                     }
                     if (note.trim() !== '') {
-                        items.push(`*_Note_* ${note},`);
+                        items.push(`*_Note_* ${note}`);
                     }
                     return `${cart.quantity} ${cart.name} ${items.join(' ')}`
                 }).join('\n')}
-                *Subtotal*\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                \n*Subtotal*\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
                 *Tax & Serivce*\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
                 *Total*\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
                 \n_Thank's, happy working_`,
