@@ -321,7 +321,13 @@ export default {
         async testEndpoint() {
             const url = 'https://wagateway.dafamsemarang.my.id/send-group-message';
             const payload = {
-                message: `*Hai, ada pesanan baru nih! Meja/Ruang ${this.table.name}*\n\n_Item_\n${this.carts.map(cart => cart.quantity + ' ' + cart.name).join(', ')}\n\n_Subtotal_\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}\n\n_Pajak & Layanan_\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}\n\n_Total_\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}\n\n_Klik tautan berikut untuk mengkonfirmasi pesanan_\nhttps://cantingfood.my.id\n_Terima kasih & selamat bekerja_`,
+                message: `*Hai Canting, ada pesanan baru nih Room/Table ${this.table.name}*
+                \n\n_Item_\n${this.carts.map(cart => cart.quantity + ' ' + cart.name + ' Variation: ' + cart.item_variations.names + ' Extra: ' + cart.item_extras.names + ' Instruction: ' + cart.instruction).join(', ')}
+                \n\n_Subtotal_\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                \n\n_Pajak & Layanan_\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                \n\n_Total_\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                \n\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ https://cantingfood.my.id
+                \n_Terima kasih & selamat bekerja_`,
                 id_group: '120363304142052316@g.us'
             };
 
