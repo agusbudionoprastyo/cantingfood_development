@@ -323,11 +323,26 @@ export default {
             const payload = {
                 message: `*Hai Canting, ada pesanan baru nih!* 
                 \nRoom/Table\n${this.table.name}
-                \n_Items_\n${this.carts.map(cart => cart.quantity + ' ' + cart.name + ' ' + Object.values(cart.item_variations.names).join(' ') + ' ' + cart.item_extras.names + ' ' + cart.instruction).join(', ')}
+                \n_Items_\n${this.carts.map(cart => {
+                    let variations = Object.values(cart.item_variations.names).join(' ');
+                    let extras = cart.item_extras.names.join(' ');
+                    let note = cart.instruction;
+                    let items = [];
+                    if (variations.trim() !== '') {
+                        items.push(`Variation ${variations}`);
+                    }
+                    if (extras.trim() !== '') {
+                        items.push(`Extra ${extras}`);
+                    }
+                    if (note.trim() !== '') {
+                        items.push(`Note ${note}`);
+                    }
+                    return `${cart.quantity} ${cart.name} ${items.join(' ')}`
+                }).join(', ')}
                 \n_Subtotal_\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
                 \n_Tax & Serivce_\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
                 \n_Total_\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-                \n_Klik tautan berikut untuk mengkonfirmasi pesanan_ https://cantingfood.my.id
+                \n_Klik tautan berikut untuk mengkonfirmasi pesanan_ https://urlis.net/odhmsv6e
                 \n_Thank's, happy working_`,
                 id_group: '120363304142052316@g.us'
             };
