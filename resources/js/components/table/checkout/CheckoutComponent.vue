@@ -318,48 +318,30 @@ export default {
                 }
             })
         },
-        async testEndpoint() {
-  const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
-  const apiKey = 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw';
-  const sender = '628567868154';
-  const number = '6281215168488';
-  const message = `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id`;
+    async testEndpoint() {
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
+        const apiKey = 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw';
+        const sender = '628567868154'; // Ganti dengan nomor pengirim yang sesuai
+        const number = '6281215168488'; // Ganti dengan nomor penerima yang sesuai
+        const message = `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id`;
 
-  // Build the callback function name
-  const callback = 'processResponse';
+        // Callback function name (opsional, tergantung pada implementasi Anda)
+        const callback = 'processResponse';
 
-  // Create a promise that resolves when the script loads
-  const loadScript = (url) => {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.async = true;
-      script.src = url;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  };
+        // Menggunakan URL dengan query string
+        const url = `${scriptUrl}?data=${encodeURIComponent(JSON.stringify({ apiKey, sender, number, message }))}&callback=${callback}`;
 
-  // Construct the URL with parameters
-  const url = `${scriptUrl}?data=${encodeURIComponent(JSON.stringify({ apiKey, sender, number, message }))}&callback=${callback}`;
-
-  try {
-    // Load the script dynamically
-    await loadScript(url);
-
-    // Assuming `processResponse` function is defined globally by the script
-    if (typeof processResponse === 'function') {
-      // Process the response using the globally defined callback
-      this.response = processResponse;
-      this.error = null;
-    } else {
-      throw new Error('processResponse function not found');
-    }
-  } catch (error) {
-    this.response = null;
-    this.error = error.message;
-  }
-},
+        // Kirim permintaan dengan metode GET
+        axios.get(url)
+            .then(response => {
+                console.log('Berhasil mengirim pesan ke Google Apps Script:', response.data);
+                // Tambahkan logika atau penanganan respons di sini sesuai kebutuhan
+            })
+            .catch(error => {
+                console.error('Gagal mengirim pesan ke Google Apps Script:', error);
+                // Tambahkan penanganan kesalahan di sini sesuai kebutuhan
+            });
+        },
 
     // async testEndpoint() {
     //   const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
