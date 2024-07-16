@@ -319,31 +319,27 @@ export default {
             })
         },
 async testEndpoint() {
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
-    const apiKey = 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw';
-    const sender = '628567868154';
-    const number = '6281215168488';
-    const message = `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id`;
+    const url = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
+    // Pesan yang akan dikirim
+    const message = '*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id';
 
-    try {
-        const response = await axios.post(scriptUrl, {
-            apiKey: apiKey,
-            sender: sender,
-            number: number,
-            message: message
-        }, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
+    // Data JSON yang akan dikirim
+    const data = {
+    message: message
+    };
+
+
+    axios.post(url, data)
+        .then(response => {
+        console.log('Message sent successfully.');
+        // Handle success if needed
+        })
+        .catch(error => {
+        console.error('Error sending message:', error);
+        // Handle error if needed
         });
+    },
 
-        console.log('Response from Google Apps Script:', response.data);
-        // Lakukan tindakan lanjutan jika perlu
-    } catch (error) {
-        console.error('Error sending message to Google Apps Script:', error);
-        // Tangani error jika diperlukan
-    }
-},
 
 
     // async testEndpoint() {
