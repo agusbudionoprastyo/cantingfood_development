@@ -318,29 +318,24 @@ export default {
                 }
             })
         },
-        async googleAppscript() {
-            const proxyUrl = 'https://dev.cantingfood.my.id/sendToGas';
-            const payload = {
-                // Sesuaikan payload sesuai dengan kebutuhan Anda
-                message: 'Contoh pesan dari frontend',
-                // Tambahkan data lain yang diperlukan untuk GAS
+        async googleAppscript(message) {
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
+            const callbackName = 'jsonpCallback'; // Nama fungsi callback JSONP
+
+            // Buat tag <script> untuk memanggil endpoint GAS dengan teknik JSONP
+            const script = document.createElement('script');
+            script.src = `${scriptURL}?callback=${callbackName}&message=${encodeURIComponent(message)}`;
+
+            // Tambahkan tag <script> ke dalam DOM untuk memanggil endpoint
+            document.body.appendChild(script);
+
+            // Definisikan fungsi callback JSONP yang akan dipanggil oleh GAS
+            window[callbackName] = (data) => {
+                console.log('Response dari GAS:', data);
+                // Handle response dari Google Apps Script jika diperlukan
+                document.body.removeChild(script); // Hapus tag <script> setelah selesai
             };
-
-            try {
-                console.log('Mengirim permintaan ke proksi:', proxyUrl);
-                console.log('Payload:', payload);
-
-                const response = await axios.post(proxyUrl, payload);
-
-                console.log('Response dari GAS:', response.data);
-            } catch (error) {
-                console.error('Error mengirim permintaan ke proksi:', error);
-                if (error.response) {
-                    console.error('Response data:', error.response.data);
-                    console.error('Response status:', error.response.status);
-                    console.error('Response headers:', error.response.headers);
-                }
-            }
+    
         },
 
         // async googleAppscript() {
