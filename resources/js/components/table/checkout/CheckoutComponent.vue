@@ -319,7 +319,7 @@ export default {
             })
         },
         async googleAppscript() {
-            const proxyUrl = 'https://dafamsemarang.my.id/sendToGas';
+            const proxyUrl = 'http://localhost/sendToGas';
             const payload = {
                 // Sesuaikan payload sesuai dengan kebutuhan Anda
                 message: 'Contoh pesan dari frontend',
