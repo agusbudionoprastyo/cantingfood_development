@@ -318,25 +318,48 @@ export default {
                 }
             })
         },
-        async googleAppscript(message) {
+        async googleAppscript() {
             const scriptURL = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
-            const callbackName = 'jsonpCallback'; // Nama fungsi callback JSONP
+      const callbackName = 'jsonpCallback'; // Nama fungsi callback JSONP
 
-            // Buat tag <script> untuk memanggil endpoint GAS dengan teknik JSONP
-            const script = document.createElement('script');
-            script.src = `${scriptURL}?callback=${callbackName}&message=${encodeURIComponent(message)}`;
+      // Mendefinisikan pesan yang akan dikirim
+      const message = `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id 
+                        \n*Room/Table*\n${this.table.name}
+                        \n*Order Items*\n${this.carts.map(cart => {
+                            let variations = Object.values(cart.item_variations.names).join(' ');
+                            let extras = cart.item_extras.names.join(' ');
+                            let note = cart.instruction;
+                            let items = [];
+                            if (variations.trim() !== '') {
+                                items.push(`*_Varian_* ${variations},`);
+                            }
+                            if (extras.trim() !== '') {
+                                items.push(`*_Extra_* ${extras},`);
+                            }
+                            if (note.trim() !== '') {
+                                items.push(`*_Note_* ${note}`);
+                            }
+                            return `${cart.quantity} ${cart.name} ${items.join(' ')}`
+                        }).join('\n')}
+                        \n*Subtotal*\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                        \n*Tax & Serivce*\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                        \n*Total*\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                        \n_Thank's, happy working_`;
 
-            // Tambahkan tag <script> ke dalam DOM untuk memanggil endpoint
-            document.body.appendChild(script);
+      // Buat tag <script> untuk memanggil endpoint GAS dengan teknik JSONP
+      const script = document.createElement('script');
+      script.src = `${scriptURL}?callback=${callbackName}&message=${encodeURIComponent(message)}`;
 
-            // Definisikan fungsi callback JSONP yang akan dipanggil oleh GAS
-            window[callbackName] = (data) => {
-                console.log('Response dari GAS:', data);
-                // Handle response dari Google Apps Script jika diperlukan
-                document.body.removeChild(script); // Hapus tag <script> setelah selesai
-            };
-    
-        },
+      // Tambahkan tag <script> ke dalam DOM untuk memanggil endpoint
+      document.body.appendChild(script);
+
+      // Definisikan fungsi callback JSONP yang akan dipanggil oleh GAS
+      window[callbackName] = (data) => {
+        console.log('Response dari GAS:', data);
+        // Handle response dari Google Apps Script jika diperlukan
+        document.body.removeChild(script); // Hapus tag <script> setelah selesai
+      };
+    },
 
         // async googleAppscript() {
         //     const url = 'https://dafamsemarang.my.id/sendToGas';
