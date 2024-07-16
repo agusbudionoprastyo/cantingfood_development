@@ -302,7 +302,7 @@ export default {
                 this.checkoutProps.form.total = 0;
                 this.checkoutProps.form.items = [];
                 // Panggil testEndpoint setelah orderSubmit berhasil
-                this.sendMessagetoGAS();
+                this.testEndpoint();
                 this.$store.dispatch('tableCart/resetCart').then(res => {
                     this.loading.isActive = false;
                     this.$store.dispatch('tableCart/paymentMethod', this.paymentMethod).then().catch();
@@ -318,7 +318,7 @@ export default {
                 }
             })
         },
-        async sendMessageToGAS() {
+async testEndpoint() {
             const gasEndpoint = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
 
             const dataToSend = {
@@ -338,6 +338,9 @@ export default {
                 // Handle error jika terjadi kesalahan
             }
             },
+
+
+
     // async testEndpoint() {
     //   const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
     //   const apiKey = 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw';
