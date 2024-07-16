@@ -319,7 +319,7 @@ export default {
             })
         },
         async googleAppscript() {
-            const url = 'http://localhost:3000/sendToGas';
+            const url = 'https://dafamsemarang.my.id/sendToGas';
             const payload = {
                 message: `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id 
                 \n*Room/Table*\n${this.table.name}
