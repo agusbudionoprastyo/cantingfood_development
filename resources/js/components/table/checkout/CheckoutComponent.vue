@@ -318,58 +318,26 @@ export default {
                 }
             })
         },
+        async sendMessageToGAS() {
+            const gasEndpoint = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
 
-async sendMessagetoGAS() {
-// URL endpoint GAS yang telah Anda deploy sebagai web app
-const gasEndpoint = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
+            const dataToSend = {
+                apiKey: 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw',
+                sender: '628567868154',
+                number: '6281215168488',
+                message: 'Halo, ini pesan dari Vue.js!'
+            };
 
-// Data yang akan dikirim ke GAS
-const dataToSend = {
-  apiKey: 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw',
-  sender: '628567868154',
-  number: '6281215168488',
-  message: 'Halo, ini pesan dari Vue.js!'
-};
+            try {
+                const response = await axios.post(gasEndpoint, dataToSend);
 
-// Fungsi untuk menambahkan script JSONP secara dinamis ke halaman
-function injectJsonp(url) {
-  const jsonpCallbackName = 'jsonpCallback_' + Date.now();
-  url += `&callback=${jsonpCallbackName}`;
-  
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = url;
-    document.body.appendChild(script);
-    
-    window[jsonpCallbackName] = (data) => {
-      delete window[jsonpCallbackName];
-      document.body.removeChild(script);
-      resolve(data);
-    };
-    
-    script.onerror = (error) => {
-      delete window[jsonpCallbackName];
-      document.body.removeChild(script);
-      reject(error);
-    };
-  });
-}
-
-// Mengirim permintaan menggunakan JSONP
-injectJsonp(`${gasEndpoint}?data=${JSON.stringify(dataToSend)}`)
-  .then(response => {
-    console.log('Response dari GAS:', response);
-    // Handle response dari GAS jika perlu
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    // Handle error jika terjadi kesalahan
-  });
-},
-
-
-
-
+                console.log('Response dari GAS:', response.data);
+                // Handle response dari GAS jika perlu
+            } catch (error) {
+                console.error('Error:', error);
+                // Handle error jika terjadi kesalahan
+            }
+            },
     // async testEndpoint() {
     //   const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
     //   const apiKey = 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw';
