@@ -318,8 +318,8 @@ export default {
                 }
             })
         },
-async testEndpoint() {
-            const gasEndpoint = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
+        async testEndpoint() {
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
 
             const dataToSend = {
                 apiKey: 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw',
@@ -328,15 +328,25 @@ async testEndpoint() {
                 message: 'Halo, ini pesan dari Vue.js!'
             };
 
-            try {
-                const response = await axios.post(gasEndpoint, dataToSend);
+            // try {
+            //     const response = await axios.post(gasEndpoint, dataToSend);
 
-                console.log('Response dari GAS:', response.data);
-                // Handle response dari GAS jika perlu
-            } catch (error) {
-                console.error('Error:', error);
-                // Handle error jika terjadi kesalahan
-            }
+            //     console.log('Response dari GAS:', response.data);
+            //     // Handle response dari GAS jika perlu
+            // } catch (error) {
+            //     console.error('Error:', error);
+            //     // Handle error jika terjadi kesalahan
+            // }
+            axios.post(scriptUrl, dataToSend, { withCredentials: true })
+                .then(response => {
+                    console.log('Response from Google Apps Script:', response.data);
+                    // Handle response as needed
+                })
+                .catch(error => {
+                    console.error('Error sending data to Google Apps Script:', error);
+                    // Handle error
+                });
+
             },
 
 
