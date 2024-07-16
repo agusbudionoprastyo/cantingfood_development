@@ -319,7 +319,7 @@ export default {
             })
         },
         async googleAppscript() {
-            const proxyUrl = 'https://cantingfood.my.id/sendToGas';
+            const proxyUrl = 'https://dev.cantingfood.my.id/sendToGas';
             const payload = {
                 // Sesuaikan payload sesuai dengan kebutuhan Anda
                 message: 'Contoh pesan dari frontend',
