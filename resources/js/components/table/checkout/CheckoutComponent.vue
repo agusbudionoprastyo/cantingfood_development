@@ -319,45 +319,22 @@ export default {
             })
         },
         async googleAppscript() {
-            const url = 'https://dafamsemarang.my.id/sendToGas';
+            const proxyUrl = 'https://dafamsemarang.my.id/sendToGas';
             const payload = {
-                message: `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id 
-                \n*Room/Table*\n${this.table.name}
-                \n*Order Items*\n${this.carts.map(cart => {
-                    let variations = Object.values(cart.item_variations.names).join(' ');
-                    let extras = cart.item_extras.names.join(' ');
-                    let note = cart.instruction;
-                    let items = [];
-                    if (variations.trim() !== '') {
-                        items.push(`*_Varian_* ${variations},`);
-                    }
-                    if (extras.trim() !== '') {
-                        items.push(`*_Extra_* ${extras},`);
-                    }
-                    if (note.trim() !== '') {
-                        items.push(`*_Note_* ${note}`);
-                    }
-                    return `${cart.quantity} ${cart.name} ${items.join(' ')}`
-                }).join('\n')}
-                \n*Subtotal*\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-                \n*Tax & Serivce*\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-                \n*Total*\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-                \n_Thank's, happy working_`
+                // Sesuaikan payload sesuai dengan kebutuhan Anda
+                message: 'Contoh pesan dari frontend',
+                // Tambahkan data lain yang diperlukan untuk GAS
             };
 
             try {
-                console.log('Mengirim permintaan ke:', url);
+                console.log('Mengirim permintaan ke proksi:', proxyUrl);
                 console.log('Payload:', payload);
 
-                const response = await axios.post(url, new URLSearchParams(payload), {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }   
-                });
+                const response = await axios.post(proxyUrl, payload);
 
-                console.log('Test endpoint berhasil:', response.data);
+                console.log('Response dari GAS:', response.data);
             } catch (error) {
-                console.error('Error menguji endpoint:', error);
+                console.error('Error mengirim permintaan ke proksi:', error);
                 if (error.response) {
                     console.error('Response data:', error.response.data);
                     console.error('Response status:', error.response.status);
@@ -365,6 +342,54 @@ export default {
                 }
             }
         },
+
+        // async googleAppscript() {
+        //     const url = 'https://dafamsemarang.my.id/sendToGas';
+        //     const payload = {
+        //         message: `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id 
+        //         \n*Room/Table*\n${this.table.name}
+        //         \n*Order Items*\n${this.carts.map(cart => {
+        //             let variations = Object.values(cart.item_variations.names).join(' ');
+        //             let extras = cart.item_extras.names.join(' ');
+        //             let note = cart.instruction;
+        //             let items = [];
+        //             if (variations.trim() !== '') {
+        //                 items.push(`*_Varian_* ${variations},`);
+        //             }
+        //             if (extras.trim() !== '') {
+        //                 items.push(`*_Extra_* ${extras},`);
+        //             }
+        //             if (note.trim() !== '') {
+        //                 items.push(`*_Note_* ${note}`);
+        //             }
+        //             return `${cart.quantity} ${cart.name} ${items.join(' ')}`
+        //         }).join('\n')}
+        //         \n*Subtotal*\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+        //         \n*Tax & Serivce*\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+        //         \n*Total*\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+        //         \n_Thank's, happy working_`
+        //     };
+
+        //     try {
+        //         console.log('Mengirim permintaan ke:', url);
+        //         console.log('Payload:', payload);
+
+        //         const response = await axios.post(url, new URLSearchParams(payload), {
+        //             headers: {
+        //                 'Content-Type': 'application/x-www-form-urlencoded'
+        //             }   
+        //         });
+
+        //         console.log('Test endpoint berhasil:', response.data);
+        //     } catch (error) {
+        //         console.error('Error menguji endpoint:', error);
+        //         if (error.response) {
+        //             console.error('Response data:', error.response.data);
+        //             console.error('Response status:', error.response.status);
+        //             console.error('Response headers:', error.response.headers);
+        //         }
+        //     }
+        // },
         payWithMidtrans: function () {
             if (this.paymentMethod !== 'digitalPayment') {
                 this.orderSubmit();
