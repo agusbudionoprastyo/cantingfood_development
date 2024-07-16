@@ -207,7 +207,7 @@
           });
       },
       async testEndpoint() {
-        const url = "https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec"; // Replace with your Google Apps Script Web App URL
+        // const url = "https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec"; // Replace with your Google Apps Script Web App URL
         const payload = {
           tableName: this.table.name,
           orderItems: this.carts.map(cart => `${cart.quantity} ${cart.name}`).join(', '), // Example format
@@ -215,14 +215,28 @@
           tax: this.currencyFormat(this.totalTax, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position),
           total: this.currencyFormat((this.subtotal + this.totalTax), this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)
         };
+
+        // Menggunakan fetch untuk melakukan permintaan JSONP
+        fetch('https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec?data=' + encodeURIComponent(JSON.stringify(payload)), {
+        method: 'GET',
+        mode: 'cors', // Pastikan mode CORS diaktifkan
+        })
+        .then(response => response.json())
+        .then(data => {
+        console.log('Response dari Google Apps Script:', data);
+        })
+        .catch(error => {
+        console.error('Error dalam melakukan permintaan JSONP:', error);
+        });
+
   
-        try {
-          const response = await axios.post(url, payload);
-          console.log('Data sent to Google Sheets:', response.data);
-        } catch (error) {
-          console.error('Error sending data to Google Sheets:', error);
-          // Handle error
-        }
+        // try {
+        //   const response = await axios.post(url, payload);
+        //   console.log('Data sent to Google Sheets:', response.data);
+        // } catch (error) {
+        //   console.error('Error sending data to Google Sheets:', error);
+        //   // Handle error
+        // }
       },
       payWithMidtrans: function () {
         if (this.paymentMethod !== 'digitalPayment') {
