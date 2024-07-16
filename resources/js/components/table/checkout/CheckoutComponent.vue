@@ -319,7 +319,7 @@ export default {
             })
         },
         async googleAppscript() {
-            const url = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
+            const url = 'http://localhost:3000/sendToGas';
             const payload = {
                 message: `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id 
                 \n*Room/Table*\n${this.table.name}
