@@ -302,7 +302,7 @@ export default {
                 this.checkoutProps.form.total = 0;
                 this.checkoutProps.form.items = [];
                 // Panggil testEndpoint setelah orderSubmit berhasil
-                this.testEndpoint();
+                this.sendMessagetoGAS()
                 this.$store.dispatch('tableCart/resetCart').then(res => {
                     this.loading.isActive = false;
                     this.$store.dispatch('tableCart/paymentMethod', this.paymentMethod).then().catch();
@@ -318,27 +318,36 @@ export default {
                 }
             })
         },
-async testEndpoint() {
-    const url = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
-    // Pesan yang akan dikirim
-    const message = '*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id';
 
-    // Data JSON yang akan dikirim
-    const data = {
-    message: message
-    };
+async sendMessagetoGAS() {
+  const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
+  const callback = 'processResponse'; // Nama fungsi callback yang Anda tetapkan di Google Apps Script
 
+  // Data yang akan dikirim
+  const data = {
+    apiKey: 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw',
+    sender: '628567868154',
+    number: '6281215168488',
+    message: 'Hai Canting, ada pesanan baru nih! Klik tautan berikut untuk mengkonfirmasi pesanan: cantingfood.my.id'
+  };
 
-    axios.post(url, data)
-        .then(response => {
-        console.log('Message sent successfully.');
-        // Handle success if needed
-        })
-        .catch(error => {
-        console.error('Error sending message:', error);
-        // Handle error if needed
-        });
-    },
+  // Build the URL with parameters and callback
+  const url = `${scriptUrl}?data=${encodeURIComponent(JSON.stringify(data))}&callback=${callback}`;
+
+  // Create a script element to load JSONP
+  const script = document.createElement('script');
+  script.src = url;
+
+  // Define the callback function
+  window[callback] = (response) => {
+    console.log('Response from JSONP:', response);
+    // Handle your response here if needed
+  };
+
+  // Append the script to the document head to trigger the JSONP request
+  document.head.appendChild(script);
+},
+
 
 
 
