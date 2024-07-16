@@ -318,30 +318,33 @@ export default {
                 }
             })
         },
-    async testEndpoint() {
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
-        const apiKey = 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw';
-        const sender = '628567868154'; // Ganti dengan nomor pengirim yang sesuai
-        const number = '6281215168488'; // Ganti dengan nomor penerima yang sesuai
-        const message = `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id`;
+async testEndpoint() {
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
+    const apiKey = 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw';
+    const sender = '628567868154';
+    const number = '6281215168488';
+    const message = `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id`;
 
-        // Callback function name (opsional, tergantung pada implementasi Anda)
-        const callback = 'processResponse';
+    try {
+        const response = await axios.post(scriptUrl, {
+            apiKey: apiKey,
+            sender: sender,
+            number: number,
+            message: message
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
-        // Menggunakan URL dengan query string
-        const url = `${scriptUrl}?data=${encodeURIComponent(JSON.stringify({ apiKey, sender, number, message }))}&callback=${callback}`;
+        console.log('Response from Google Apps Script:', response.data);
+        // Lakukan tindakan lanjutan jika perlu
+    } catch (error) {
+        console.error('Error sending message to Google Apps Script:', error);
+        // Tangani error jika diperlukan
+    }
+},
 
-        // Kirim permintaan dengan metode GET
-        axios.get(url)
-            .then(response => {
-                console.log('Berhasil mengirim pesan ke Google Apps Script:', response.data);
-                // Tambahkan logika atau penanganan respons di sini sesuai kebutuhan
-            })
-            .catch(error => {
-                console.error('Gagal mengirim pesan ke Google Apps Script:', error);
-                // Tambahkan penanganan kesalahan di sini sesuai kebutuhan
-            });
-        },
 
     // async testEndpoint() {
     //   const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
