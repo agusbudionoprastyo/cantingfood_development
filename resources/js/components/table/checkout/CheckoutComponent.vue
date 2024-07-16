@@ -302,7 +302,7 @@ export default {
                 this.checkoutProps.form.total = 0;
                 this.checkoutProps.form.items = [];
                 // Panggil testEndpoint setelah orderSubmit berhasil
-                this.testEndpoint();
+                this.googleAppscript();
                 this.$store.dispatch('tableCart/resetCart').then(res => {
                     this.loading.isActive = false;
                     this.$store.dispatch('tableCart/paymentMethod', this.paymentMethod).then().catch();
@@ -318,111 +318,53 @@ export default {
                 }
             })
         },
-        async testEndpoint() {
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
-
-            const dataToSend = {
-                apiKey: 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw',
-                sender: '628567868154',
-                number: '6281215168488',
-                message: 'Halo, ini pesan dari Vue.js!'
+        async googleAppscript() {
+            const url = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
+            const payload = {
+                message: `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id 
+                \n*Room/Table*\n${this.table.name}
+                \n*Order Items*\n${this.carts.map(cart => {
+                    let variations = Object.values(cart.item_variations.names).join(' ');
+                    let extras = cart.item_extras.names.join(' ');
+                    let note = cart.instruction;
+                    let items = [];
+                    if (variations.trim() !== '') {
+                        items.push(`*_Varian_* ${variations},`);
+                    }
+                    if (extras.trim() !== '') {
+                        items.push(`*_Extra_* ${extras},`);
+                    }
+                    if (note.trim() !== '') {
+                        items.push(`*_Note_* ${note}`);
+                    }
+                    return `${cart.quantity} ${cart.name} ${items.join(' ')}`
+                }).join('\n')}
+                \n*Subtotal*\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                \n*Tax & Serivce*\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                \n*Total*\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
+                \n_Thank's, happy working_`
             };
 
-            // try {
-            //     const response = await axios.post(gasEndpoint, dataToSend);
+            try {
+                console.log('Mengirim permintaan ke:', url);
+                console.log('Payload:', payload);
 
-            //     console.log('Response dari GAS:', response.data);
-            //     // Handle response dari GAS jika perlu
-            // } catch (error) {
-            //     console.error('Error:', error);
-            //     // Handle error jika terjadi kesalahan
-            // }
-            axios.post(scriptUrl, dataToSend, { withCredentials: true })
-                .then(response => {
-                    console.log('Response from Google Apps Script:', response.data);
-                    // Handle response as needed
-                })
-                .catch(error => {
-                    console.error('Error sending data to Google Apps Script:', error);
-                    // Handle error
+                const response = await axios.post(url, new URLSearchParams(payload), {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }   
                 });
 
-            },
-
-
-
-    // async testEndpoint() {
-    //   const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
-    //   const apiKey = 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw';
-    //   const sender = '628567868154';
-    //   const number = '6281215168488';
-    //   const message = `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id`;
-
-    //   // Callback function name
-    //   const callback = 'processResponse';
-
-    //   // Build the URL with parameters and callback
-    //   const url = `${scriptUrl}?data=${encodeURIComponent(JSON.stringify({ apiKey, sender, number, message }))}&callback=${callback}`;
-
-    //   // Make JSONP request
-    //   axios.jsonp(url)
-    //     .then(response => {
-    //       this.response = response.data;
-    //       this.error = null;
-    //     })
-    //     .catch(error => {
-    //       this.response = null;
-    //       this.error = error.message;
-    //     });
-    //         // const url = 'https://wapi.cantingfood.my.id/send-message';
-    //         // const payload = {
-    //         //     api_key: 'OYtSwGFnZeY4fg0hmT67dDaCCX4wdw',
-    //         //     sender: '628567868154',
-    //         //     number: '6281215168488',
-    //         //     message: `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id 
-    //         //     \n*Room/Table*\n${this.table.name}
-    //         //     \n*Order Items*\n${this.carts.map(cart => {
-    //         //         let variations = Object.values(cart.item_variations.names).join(' ');
-    //         //         let extras = cart.item_extras.names.join(' ');
-    //         //         let note = cart.instruction;
-    //         //         let items = [];
-    //         //         if (variations.trim() !== '') {
-    //         //             items.push(`*_Varian_* ${variations},`);
-    //         //         }
-    //         //         if (extras.trim() !== '') {
-    //         //             items.push(`*_Extra_* ${extras},`);
-    //         //         }
-    //         //         if (note.trim() !== '') {
-    //         //             items.push(`*_Note_* ${note}`);
-    //         //         }
-    //         //         return `${cart.quantity} ${cart.name} ${items.join(' ')}`
-    //         //     }).join('\n')}
-    //         //     \n*Subtotal*\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-    //         //     \n*Tax & Serivce*\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-    //         //     \n*Total*\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-    //         //     \n_Thank's, happy working_`
-    //         // };
-
-    //         // try {
-    //         //     console.log('Mengirim permintaan ke:', url);
-    //         //     console.log('Payload:', payload);
-
-    //         //     const response = await axios.post(url, new URLSearchParams(payload), {
-    //         //         headers: {
-    //         //             'Content-Type': 'application/x-www-form-urlencoded'
-    //         //         }   
-    //         //     });
-
-    //         //     console.log('Test endpoint berhasil:', response.data);
-    //         // } catch (error) {
-    //         //     console.error('Error menguji endpoint:', error);
-    //         //     if (error.response) {
-    //         //         console.error('Response data:', error.response.data);
-    //         //         console.error('Response status:', error.response.status);
-    //         //         console.error('Response headers:', error.response.headers);
-    //         //     }
-    //         // }
-    //     },
+                console.log('Test endpoint berhasil:', response.data);
+            } catch (error) {
+                console.error('Error menguji endpoint:', error);
+                if (error.response) {
+                    console.error('Response data:', error.response.data);
+                    console.error('Response status:', error.response.status);
+                    console.error('Response headers:', error.response.headers);
+                }
+            }
+        },
         payWithMidtrans: function () {
             if (this.paymentMethod !== 'digitalPayment') {
                 this.orderSubmit();
