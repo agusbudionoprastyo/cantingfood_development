@@ -62,7 +62,6 @@ export const tableCart = {
                         isNew = true;
                         _.forEach(state.lists, (list, listKey) => {
                             if (list.item_id === pay.item_id) {
-
                                 if (state.lists[listKey].item_variations.variations !== "undefined") {
                                     if (Object.keys(state.lists[listKey].item_variations.variations).length !== 0) {
                                         _.forEach(state.lists[listKey].item_variations.variations, (variationId, variationKey) => {
@@ -74,7 +73,7 @@ export const tableCart = {
                                         });
                                     }
                                 }
-
+    
                                 if (pay.item_extras.extras.length !== 0 && state.lists[listKey].item_extras.extras.length !== 0) {
                                     _.forEach(pay.item_extras.extras, (payExtra) => {
                                         if (state.lists[listKey].item_extras.extras.includes(payExtra) && state.lists[listKey].item_extras.extras.length === pay.item_extras.extras.length) {
@@ -90,7 +89,7 @@ export const tableCart = {
                                         variationAndExtraChecker.push(false);
                                     }
                                 }
-
+    
                                 if (variationAndExtraChecker.includes(false)) {
                                     newChecker.push(false);
                                 } else {
@@ -102,7 +101,7 @@ export const tableCart = {
                                 newChecker.push(false);
                             }
                         });
-
+    
                         _.forEach(newChecker, (check) => {
                             if (check) {
                                 isNew = false;
@@ -110,7 +109,7 @@ export const tableCart = {
                         });
                         newChecker = [];
                     }
-
+    
                     if (isNew) {
                         state.lists.push({
                             discount: pay.discount,
@@ -139,7 +138,7 @@ export const tableCart = {
                 _.forEach(state.lists, (list, listKey) => {
                     state.lists[listKey].total = ((list.convert_price + list.item_variation_total + list.item_extra_total) * list.quantity);
                     subtotal += state.lists[listKey].total;
-                    totaltaxes += list.taxes; // Pastikan totaltaxes diperbarui dengan benar
+                    totaltaxes += list.taxes; // Pastikan menggunakan list.taxes, bukan list.tax
                 });
                 state.subtotal = subtotal;
                 state.taxes = totaltaxes; // Pastikan taxes diperbarui dengan benar
@@ -150,6 +149,7 @@ export const tableCart = {
             console.log('Updated Subtotal:', state.subtotal);
             console.log('Updated Total taxes:', state.taxes); // Tambahkan log untuk memeriksa nilai taxes
         },
+        // Mutasi lainnya...
         quantity: function (state, payload) {
             if (payload.status === "increment") {
                 state.lists[payload.id].quantity++;

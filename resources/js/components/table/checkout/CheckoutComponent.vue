@@ -224,9 +224,10 @@ export default {
             return this.$store.getters['tableCart/table'];
         },
         totalTax: function () {
-            console.log('Total Tax:', this.$store.getters['tableCart/taxes']);
-            return this.$store.getters['tableCart/taxes'];
-        }
+        const tax = this.$store.getters['tableCart/taxes'];
+        console.log('Total Tax from Store:', tax);
+        return tax;
+    }
     },
     methods: {
         currencyFormat: function (amount, decimal, currency, position) {
