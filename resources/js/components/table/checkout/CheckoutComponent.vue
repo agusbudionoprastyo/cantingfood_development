@@ -120,7 +120,7 @@
                                         </span>
                                         <span class="text-sm leading-6 capitalize">
                                             {{
-                                                currencyFormat(order.total_tax_currency_price, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position)
+                                                order.total_tax_currency_price
                                             }}
                                         </span>
                                     </li>
