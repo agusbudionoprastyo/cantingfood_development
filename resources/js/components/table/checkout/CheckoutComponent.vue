@@ -224,8 +224,8 @@ export default {
             return this.$store.getters['tableCart/table'];
         },
         totalTax: function () {
-            console.log('Total Tax:', this.$store.getters['tableCart/total_tax']);
-            return this.$store.getters['tableCart/total_tax'];
+            console.log('Total Tax:', this.$store.getters['tableCart/tax']);
+            return this.$store.getters['tableCart/tax'];
         }
     },
     methods: {
