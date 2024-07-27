@@ -302,7 +302,7 @@ export default {
                 this.checkoutProps.form.total = 0;
                 this.checkoutProps.form.items = [];
                 // Panggil testEndpoint setelah orderSubmit berhasil
-                this.googleAppscript();
+                // this.googleAppscript();
                 this.$store.dispatch('tableCart/resetCart').then(res => {
                     this.loading.isActive = false;
                     this.$store.dispatch('tableCart/paymentMethod', this.paymentMethod).then().catch();
@@ -318,8 +318,8 @@ export default {
                 }
             })
         },
-        async googleAppscript() {
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
+    async googleAppscript() {
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbzPHh-H0AUpGdHub9Dcd1IUbxxAPrJ_Tzc83ZiT-J5szwFm1uSC4PJhQZNhstoSuN7SAw/exec';
       const callbackName = 'jsonpCallback'; // Nama fungsi callback JSONP
 
       // Mendefinisikan pesan yang akan dikirim
@@ -360,54 +360,6 @@ export default {
         document.body.removeChild(script); // Hapus tag <script> setelah selesai
       };
     },
-
-        // async googleAppscript() {
-        //     const url = 'https://dafamsemarang.my.id/sendToGas';
-        //     const payload = {
-        //         message: `*Hai Canting, ada pesanan baru nih!*\n_Klik tautan berikut untuk mengkonfirmasi pesanan_ cantingfood.my.id 
-        //         \n*Room/Table*\n${this.table.name}
-        //         \n*Order Items*\n${this.carts.map(cart => {
-        //             let variations = Object.values(cart.item_variations.names).join(' ');
-        //             let extras = cart.item_extras.names.join(' ');
-        //             let note = cart.instruction;
-        //             let items = [];
-        //             if (variations.trim() !== '') {
-        //                 items.push(`*_Varian_* ${variations},`);
-        //             }
-        //             if (extras.trim() !== '') {
-        //                 items.push(`*_Extra_* ${extras},`);
-        //             }
-        //             if (note.trim() !== '') {
-        //                 items.push(`*_Note_* ${note}`);
-        //             }
-        //             return `${cart.quantity} ${cart.name} ${items.join(' ')}`
-        //         }).join('\n')}
-        //         \n*Subtotal*\n${this.currencyFormat(this.subtotal, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-        //         \n*Tax & Serivce*\n${this.currencyFormat(this.subtotal * 0.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-        //         \n*Total*\n${this.currencyFormat(this.subtotal * 1.21, this.setting.site_digit_after_decimal_point, this.setting.site_default_currency_symbol, this.setting.site_currency_position)}
-        //         \n_Thank's, happy working_`
-        //     };
-
-        //     try {
-        //         console.log('Mengirim permintaan ke:', url);
-        //         console.log('Payload:', payload);
-
-        //         const response = await axios.post(url, new URLSearchParams(payload), {
-        //             headers: {
-        //                 'Content-Type': 'application/x-www-form-urlencoded'
-        //             }   
-        //         });
-
-        //         console.log('Test endpoint berhasil:', response.data);
-        //     } catch (error) {
-        //         console.error('Error menguji endpoint:', error);
-        //         if (error.response) {
-        //             console.error('Response data:', error.response.data);
-        //             console.error('Response status:', error.response.status);
-        //             console.error('Response headers:', error.response.headers);
-        //         }
-        //     }
-        // },
         payWithMidtrans: function () {
             if (this.paymentMethod !== 'digitalPayment') {
                 this.orderSubmit();
