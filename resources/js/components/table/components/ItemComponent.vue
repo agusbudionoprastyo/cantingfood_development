@@ -274,7 +274,7 @@
     </div>
     <!--========VARIATION PART END===========-->
 </template>
-<script>
+<!-- <script>
 import itemDesignEnum from "../../../enums/modules/itemDesignEnum";
 import appService from "../../../services/appService";
 import 'vue3-carousel/dist/carousel.css';
@@ -711,6 +711,335 @@ export default {
 
                     alertService.success(this.$t('message.add_to_cart'));
                     appService.modalHide('#item-variation-modal');
+                }).catch();
+            }
+        },
+    }
+}
+</script> -->
+<script>
+import itemDesignEnum from "../../../enums/modules/itemDesignEnum";
+import appService from "../../../services/appService";
+import 'vue3-carousel/dist/carousel.css';
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
+import _ from 'lodash';
+import alertService from "../../../services/alertService";
+
+export default {
+    name: "ItemComponent",
+    components: {
+        Carousel,
+        Slide,
+        Pagination,
+        Navigation,
+    },
+    props: {
+        items: Object,
+        design: Number,
+        type: Number
+    },
+    data() {
+        return {
+            item: null,
+            itemInfo: null,
+            addons: {},
+            addonQuantity: {},
+            itemArrays: [],
+            itemDesignEnum: itemDesignEnum,
+            settings: {
+                itemsToShow: 4.3,
+                wrapAround: false,
+                snapAlign: "start"
+            },
+            addonSettings: {
+                itemsToShow: 3,
+                wrapAround: false,
+                snapAlign: "start"
+            },
+            temp: {
+                name: "",
+                image: "",
+                item_id: 0,
+                quantity: 0,
+                discount: 0,
+                currency_price: 0,
+                convert_price: 0,
+                tax_rate: 0,  // Tarif pajak
+                tax: 0,       // Total pajak
+                item_variations: {
+                    variations: {},
+                    names: {}
+                },
+                item_extras: {
+                    extras: [],
+                    names: []
+                },
+                item_variation_total: 0,
+                item_extra_total: 0,
+                total_price: 0,
+                instruction: "",
+            },
+            itemBreakpoints: {
+                200: {
+                    itemsToShow: 1.1,
+                    wrapAround: false,
+                    snapAlign: 'start',
+                },
+                250: {
+                    itemsToShow: 1.5,
+                    wrapAround: false,
+                    snapAlign: 'start',
+                },
+                300: {
+                    itemsToShow: 2.2,
+                    wrapAround: false,
+                    snapAlign: 'start',
+                },
+                375: {
+                    itemsToShow: 2.5,
+                    wrapAround: false,
+                    snapAlign: 'start',
+                },
+                540: {
+                    itemsToShow: 3.5,
+                    wrapAround: false,
+                    snapAlign: 'start',
+                },
+                700: {
+                    itemsToShow: 4.3,
+                    wrapAround: false,
+                    snapAlign: 'start',
+                }
+            },
+            addonBreakpoints: {
+                200: {
+                    itemsToShow: 1.1,
+                    wrapAround: false,
+                    snapAlign: 'start',
+                },
+                250: {
+                    itemsToShow: 1.3,
+                    wrapAround: false,
+                    snapAlign: 'start',
+                },
+                300: {
+                    itemsToShow: 1.4,
+                    wrapAround: false,
+                    snapAlign: 'start',
+                },
+                375: {
+                    itemsToShow: 1.7,
+                    wrapAround: false,
+                    snapAlign: 'start',
+                },
+                540: {
+                    itemsToShow: 2.5,
+                    wrapAround: false,
+                    snapAlign: 'start',
+                },
+                700: {
+                    itemsToShow: 3,
+                    wrapAround: false,
+                    snapAlign: 'start',
+                }
+            },
+        }
+    },
+    computed: {
+        setting() {
+            return this.$store.getters['frontendSetting/lists'];
+        },
+    },
+    methods: {
+        onlyNumber(e) {
+            return appService.onlyNumber(e);
+        },
+        textShortener(text, number) {
+            return appService.textShortener(text, number);
+        },
+        currencyFormat(amount, decimal, currency, position) {
+            return appService.currencyFormat(amount, decimal, currency, position);
+        },
+        infoModalShow(name, caution) {
+            this.itemInfo = {
+                name: name,
+                caution: caution
+            };
+            const modalTarget = this.$refs.itemInfoModal;
+            modalTarget?.classList?.add("active");
+            document.body.style.overflowY = "hidden";
+        },
+        infoModalHide() {
+            this.itemInfo = null;
+            const modalDiv = this.$refs.itemInfoModal;
+            modalDiv?.classList?.remove("active");
+            document.body.style.overflowY = "auto";
+        },
+        variationModalShow(item) {
+            this.item = item;
+
+            if (this.item.itemAttributes.length > 0) {
+                _.forEach(this.item.itemAttributes, (element) => {
+                    if (typeof this.item.variations[element.id][0] !== "undefined") {
+                        this.temp.item_variations.variations[this.item.variations[element.id][0].item_attribute_id] = this.item.variations[element.id][0].id;
+                        this.temp.item_variations.names[element.name] = this.item.variations[element.id][0].name;
+                        this.temp.item_variation_total += this.item.variations[element.id][0].convert_price;
+                    }
+                });
+            }
+
+            if (this.item.addons.length > 0) {
+                _.forEach(this.item.addons, (addon) => {
+                    this.addonQuantity[addon.id] = 1;
+                });
+            }
+
+            this.temp.name = this.item.name;
+            this.temp.image = this.item.thumb;
+            this.temp.item_id = this.item.id;
+            this.temp.quantity = 1;
+            this.temp.discount = 0;
+            this.temp.convert_price = item.offer.length > 0 ? item.offer[0].convert_price : item.convert_price;
+            this.temp.currency_price = item.offer.length > 0 ? item.offer[0].currency_price : item.currency_price;
+            this.temp.total_price = (item.offer.length > 0 ? item.offer[0].convert_price : item.convert_price) + this.temp.item_variation_total;
+
+            const modalTarget = this.$refs.itemVariationModal;
+            modalTarget?.classList?.add("active");
+            document.body.style.overflowY = "hidden";
+        },
+        variationModalHide() {
+            this.item = null;
+
+            this.temp.name = "";
+            this.temp.image = "";
+            this.temp.item_id = 0;
+            this.temp.quantity = 0;
+            this.temp.discount = 0;
+            this.temp.currency_price = 0;
+            this.temp.convert_price = 0;
+            this.temp.item_variations = {
+                variations: {},
+                names: {}
+            };
+            this.temp.item_extras = {
+                extras: [],
+                names: []
+            };
+            this.temp.item_variation_total = 0;
+            this.temp.item_extra_total = 0;
+            this.temp.total_price = 0;
+            this.temp.instruction = "";
+
+            const modalDiv = this.$refs.itemVariationModal;
+            modalDiv?.classList?.remove("active");
+            document.body.style.overflowY = "auto";
+        },
+        changeVariation(attributeId, variationId, variationName, variationPrice) {
+            this.temp.item_variations.variations[attributeId] = variationId;
+            _.forEach(this.item.itemAttributes, (element) => {
+                if (element.id === attributeId) {
+                    this.temp.item_variations.names[element.name] = variationName;
+                }
+            });
+            this.totalPriceSetup();
+        },
+        changeVariationAdjust(attributeId, variationId) {
+            _.forEach(this.item.variations[attributeId], (variation) => {
+                if (variation.id === variationId) {
+                    this.changeVariation(attributeId, variationId, variation.name, variation.convert_price);
+                }
+            });
+        },
+        changeExtra(e, id, name) {
+            if (e.target.checked) {
+                this.temp.item_extras.extras.push(id);
+                this.temp.item_extras.names.push(name);
+            } else {
+                this.temp.item_extras.extras = _.remove(this.temp.item_extras.extras, (n) => n !== id);
+                this.temp.item_extras.names = _.remove(this.temp.item_extras.names, (n) => n !== name);
+            }
+            this.totalPriceSetup();
+        },
+        changeAddon(id, price) {
+            if (this.addonQuantity[id] !== undefined) {
+                this.addons[id] = {
+                    id: id,
+                    total_price: price,
+                    quantity: this.addonQuantity[id]
+                };
+                this.totalPriceSetup();
+            }
+        },
+        totalPriceSetup() {
+            let item_variation_total = 0;
+            let item_extra_total = 0;
+            let item_addon_total = 0;
+            let tax = 0;
+
+            // Hitung total variasi
+            _.forEach(this.temp.item_variations.variations, (variationId, attributeId) => {
+                _.forEach(this.item.variations[attributeId], (itemVariation) => {
+                    if (variationId === itemVariation.id) {
+                        item_variation_total += itemVariation.convert_price;
+                    }
+                });
+            });
+
+            // Hitung total ekstra
+            _.forEach(this.temp.item_extras.extras, (extraId) => {
+                _.forEach(this.item.extras, (itemExtra) => {
+                    if (extraId === itemExtra.id) {
+                        item_extra_total += itemExtra.convert_price;
+                    }
+                });
+            });
+
+            // Hitung total addon
+            _.forEach(this.addons, (addon) => {
+                item_addon_total += (addon.total_price * addon.quantity);
+            });
+
+            // Hitung pajak
+            tax = ((this.temp.convert_price + item_variation_total + item_extra_total) * (this.temp.tax_rate / 100));
+
+            // Hitung total harga
+            this.temp.item_variation_total = item_variation_total;
+            this.temp.item_extra_total = item_extra_total;
+            this.temp.tax = tax;
+            this.temp.total_price = parseFloat((((this.temp.convert_price + item_variation_total + item_extra_total) * this.temp.quantity) + item_addon_total) + tax);
+        },
+        addToCart() {
+            this.itemArrays = [
+                {
+                    name: this.temp.name,
+                    image: this.temp.image,
+                    item_id: this.temp.item_id,
+                    quantity: this.temp.quantity,
+                    discount: this.temp.discount,
+                    currency_price: this.temp.currency_price,
+                    convert_price: this.temp.convert_price,
+                    item_variations: this.temp.item_variations,
+                    item_extras: this.temp.item_extras,
+                    item_variation_total: this.temp.item_variation_total,
+                    item_extra_total: this.temp.item_extra_total,
+                    tax: this.temp.tax, // Tambahkan pajak
+                    instruction: this.temp.instruction
+                }
+            ];
+
+            // Tambahkan addon ke keranjang
+            if (Object.keys(this.addons).length > 0) {
+                _.forEach(this.addons, (addon) => {
+                    this.itemArrays[0].addons = this.itemArrays[0].addons || [];
+                    this.itemArrays[0].addons.push(addon);
+                });
+            }
+
+            if (this.itemArrays.length > 0) {
+                this.$store.dispatch("tableCart/lists", this.itemArrays).then((res) => {
+                    this.itemArrays = [];
+                    this.variationModalHide();
+                    alertService.success('Item added to cart');
                 }).catch();
             }
         },

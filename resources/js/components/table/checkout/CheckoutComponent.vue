@@ -224,7 +224,7 @@ export default {
             return this.$store.getters['tableCart/table'];
         },
         totalTax: function () {
-        const tax = this.$store.getters['tableCart/taxes'];
+        const tax = this.$store.getters['tableCart/tax'];
         console.log('Total Tax from Store:', tax);
         return tax;
     }
